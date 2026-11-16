@@ -1,0 +1,24 @@
+name: Build Schibz Burk (Mac)
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: npm install
+        run: |
+          npm install --no-audit --no-fund > npm.log 2>&1 || { echo "::error::$(grep 'npm error' npm.log | head -8 | tr '\n' ' ')"; exit 1; }
+      - run: npx electron-builder --mac zip dmg --arm64 --x64 --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Schibz-Burk-Mac
+          path: |
+            dist/*.dmg
+            dist/*.zip

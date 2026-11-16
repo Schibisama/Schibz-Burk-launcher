@@ -1,0 +1,82 @@
+{
+  "name": "schibz-burk-launcher",
+  "version": "1.0.0",
+  "description": "Launcher du serveur Dragons (Schibz Burk)",
+  "main": "src/main.js",
+  "author": "Schibi",
+  "license": "MIT",
+  "dependencies": {
+    "@xmcl/core": "^2.14.1",
+    "@xmcl/installer": "^6.1.0",
+    "@xmcl/user": "^4.2.0",
+    "adm-zip": "^0.6.1",
+    "minecraft-launcher-core": "^3.18.2",
+    "msmc": "^5.0.5"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac zip dmg --arm64 --x64 --publish never",
+    "dist:win": "electron-builder --win nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "fr.schibzburk.launcher",
+    "productName": "Schibz Burk",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**",
+      "build/**",
+      "config.json",
+      "package.json",
+      "seed/**"
+    ],
+    "mac": {
+      "category": "public.app-category.games",
+      "icon": "build/logo.png",
+      "identity": null,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Schibz Burk utilise le micro pour le chat vocal en jeu."
+      },
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "dmg": {
+      "title": "Schibz Burk"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Schibz-Burk-Setup-${version}.${ext}"
+    }
+  }
+}

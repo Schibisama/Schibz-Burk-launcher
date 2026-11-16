@@ -1,0 +1,26 @@
+name: Build Schibz Burk (Windows)
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: npm install
+        run: |
+          npm install --no-audit --no-fund > npm.log 2>&1 || { echo "::error::$(grep 'npm error' npm.log | head -8 | tr '\n' ' ')"; exit 1; }
+      - run: npx electron-builder --win nsis --x64 --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Schibz-Burk-Windows
+          path: |
+            dist/*.exe
